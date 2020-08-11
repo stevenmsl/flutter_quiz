@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import './question.dart';
-import './answer.dart';
+import './quiz.dart';
+import './result.dart';
 
 void main() {
   runApp(MyApp());
@@ -23,7 +23,42 @@ class _MyAppState extends State<MyApp> {
   // a leading underscore indicates
   // that this is a private property
   var _questionIndex = 0;
-  void _answerQuestion() {
+  var _totalScore = 0;
+  final _questions = const [
+    // the second const above
+    // will make this list unmodifiable
+    {
+      // this is a map
+      'questionText': 'What\'s your favorite color?',
+      'answers': [
+        {'text': 'Black', 'score': 10},
+        {'text': 'Red', 'score': 5},
+        {'text': 'Green', 'score': 3},
+        {'text': 'White', 'score': 1},
+      ]
+    },
+    {
+      'questionText': 'What\'s yout favorite animal?',
+      'answers': [
+        {'text': 'Rabbit', 'score': 2},
+        {'text': 'Dog', 'score': 1},
+        {'text': 'Elephant', 'score': 3},
+        {'text': 'Lion', 'score': 5},
+      ]
+    },
+    {
+      'questionText': 'What\'s yout favorite instructor?',
+      'answers': [
+        {'text': 'Steven', 'score': 1},
+        {'text': 'Arlo', 'score': 1},
+        {'text': 'Steve', 'score': 1},
+        {'text': 'Arlo2', 'score': 1},
+      ]
+    },
+  ];
+
+  void _answerQuestion(int score) {
+    _totalScore += score;
     // notify flutter that state has changed
     // build will be called afterwards
     setState(() {
@@ -34,41 +69,18 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    const questions = const [
-      // the second const above
-      // will make this list unmodifiable
-      {
-        // this is a map
-        'questionText': 'What\'s your favorite color?',
-        'answers': ['Black', 'Red', 'Green', 'White']
-      },
-      {
-        'questionText': 'What\'s yout favorite animal?',
-        'answers': ['Rabbit', 'Dog', 'Elephant', 'Lion']
-      },
-      {
-        'questionText': 'What\'s yout favorite instructor?',
-        'answers': ['Steven', 'Arlo', 'Steve', 'Arlo2']
-      },
-    ];
     return MaterialApp(
         home: Scaffold(
       appBar: AppBar(
         title: Text('My First App'),
       ),
-      body: Column(
-        children: [
-          Question(questions[_questionIndex]['questionText']),
-          // ... spread operator
-          // use spread operator to add each Answer widget
-          // in the list as an element to the children array
-          ...(questions[_questionIndex]['answers'] as List<String>)
-              // map returns Iterable<T>
-              .map((answer) {
-            return Answer(_answerQuestion, answer);
-          }).toList() // use toList to convert it to List<Answer>
-        ],
-      ),
+      body: _questionIndex < _questions.length
+          ? Quiz(
+              answerQuestion: _answerQuestion,
+              questionIndex: _questionIndex,
+              questions: _questions,
+            )
+          : Result(),
     ));
   }
 }
