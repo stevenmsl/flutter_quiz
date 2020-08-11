@@ -57,6 +57,13 @@ class _MyAppState extends State<MyApp> {
     },
   ];
 
+  void _resetQuiz() {
+    setState(() {
+      _questionIndex = 0;
+      _totalScore = 0;
+    });
+  }
+
   void _answerQuestion(int score) {
     _totalScore += score;
     // notify flutter that state has changed
@@ -80,7 +87,7 @@ class _MyAppState extends State<MyApp> {
               questionIndex: _questionIndex,
               questions: _questions,
             )
-          : Result(),
+          : Result(_totalScore, _resetQuiz),
     ));
   }
 }
